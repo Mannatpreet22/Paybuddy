@@ -1,4 +1,5 @@
 import { Button } from "./button";
+import { useRouter } from "next/navigation"
 
 interface AppbarProps {
     user?: {
@@ -14,8 +15,13 @@ export const Appbar = ({
     onSignin,
     onSignout
 }: AppbarProps) => {
+
+    const router = useRouter()
+
     return <div className="flex justify-between border-b px-4">
-        <div className="text-lg flex flex-col justify-center">
+        <div className="text-lg flex flex-col justify-center cursor-pointer" onClick={()=>{
+            router.push('/')
+        }}>
             PayBuddy
         </div>
         <div className="flex flex-col justify-center pt-2">
