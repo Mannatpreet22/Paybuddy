@@ -29,6 +29,6 @@ export default async function ()
     }
     
     return <div className="w-full text-4xl flex items-center justify-center">
-        Balance - ${balance?.amount/100}
+        Balance :  ${balance?.amount/100}
     </div>
 }

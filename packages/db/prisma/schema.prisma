@@ -55,6 +55,25 @@ model OnRampTransaction {
   user      User         @relation(fields: [userId], references: [id])
 }
 
+model BankMock {
+  id Int @id @default(autoincrement())
+  name String
+  password String
+  cardNumber String @unique
+  balance Int
+  bankTransactions BankTransactions[]
+}
+
+model BankTransactions {
+  id Int @id @default(autoincrement())
+  to String
+  token String @unique
+  timestamp DateTime
+  amount Int
+  userId Int
+  user BankMock @relation(fields: [userId], references: [id])
+}
+
 enum AuthType {
   Google
   Github
