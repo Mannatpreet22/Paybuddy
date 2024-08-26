@@ -12,18 +12,27 @@ export async function createOnrampTransactions(provider: string, amount: number)
     }
 
     const token = (Math.random() * 1000).toString();
-    await prisma.onRampTransaction.create({
-        data: {
-            provider,
-            status: "Processing",
-            startTime: new Date(),
-            token: token,
-            userId: Number(session?.user?.id),
-            amount: amount
-        }
-    })
+    try
+    {
+        await prisma.onRampTransaction.create({
+            data: {
+                provider,
+                status: "Processing",
+                startTime: new Date(),
+                token: token, // problem hai ....
+                userId: Number(session?.user?.id),
+                amount: amount
+            }
+        })
+    }
+    catch(e)
+    {
+        console.error(e)
+    }
+    
 
     return {
-        msg: "Done"
+        msg: "Done",
+        redirectUrl : `http://localhost:3000/api/username?userId=${session?.user?.id}&amount=${amount}`
     }
 }

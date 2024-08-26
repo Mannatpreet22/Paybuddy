@@ -51,7 +51,27 @@ async function main() {
       },
     },
   })
-  console.log({ alice, bob })
+
+  const aliceBank = await prisma.bankMock.upsert({
+    where : {cardNumber : "0000000000000000"},
+    update : {},
+    create : {
+      name : "alice",
+      password : await bcrypt.hash('alice', 10),
+      cardNumber : "0000000000000000",
+      balance : 1000,
+      bankTransactions : {
+        create : {
+          to : "Paybuddy",
+          amount : 10,
+          timestamp : new Date(),
+          token : "alice"
+        }
+      }
+    }
+  })
+
+  console.log({ alice, bob,aliceBank })
 }
 main()
   .then(async () => {

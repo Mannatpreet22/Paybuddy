@@ -6,7 +6,7 @@ export const OnRampTransactions = ({
     transactions: {
         time: Date,
         amount: number,
-        // TODO: Can the type of `status` be more specific?
+        // TODO: Can the type of `status` be more specific? ans:- enum
         status: string,
         provider: string
     }[]

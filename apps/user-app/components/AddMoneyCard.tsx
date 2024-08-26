@@ -36,12 +36,25 @@ export const AddMoney = () => {
         }))} />
         <div className="flex justify-center pt-4">
             <Button onClick={() => {
-                createOnrampTransactions(provider,value * 100)
-                // window.location.href = redirectUrl || "";
+                handleOnrampTransactions(provider,value)
             }}>
             Add Money
             </Button>
         </div>
     </div>
 </Card>
+
+async function handleOnrampTransactions(provider : string,value : number)
+{
+    const response = await createOnrampTransactions(provider,value * 100)
+    if(response.redirectUrl)
+    {
+        window.location.href = response.redirectUrl;
+    }
+    else
+    {
+        alert(response.message || "Transaction failed!");
+    }
+
+}
 }
