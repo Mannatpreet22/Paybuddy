@@ -14,9 +14,10 @@ type TransferFunds = {
 }
 
 export default async function transferAmount({userId,amount,cardNumber,password} : TransferFunds){
-    if(!userId || !amount || !cardNumber || !password)
+    console.log({userId,amount,cardNumber,password})
+    if(!userId || !amount)
     {
-        return null
+        throw new Error('userId not found!')
     }
 
 
