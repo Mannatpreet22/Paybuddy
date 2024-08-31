@@ -16,7 +16,8 @@ app.post('/HDFCwebhook',async (req,res) =>{
     const userInfo = await db.onRampTransaction.findFirst({
         where : {
             userId : Number(paymentInformation.userId),
-            status : "Processing"
+            status : "Processing",
+            amount : paymentInformation.amount
         }           
     })
 

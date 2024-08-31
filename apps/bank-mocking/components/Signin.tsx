@@ -12,49 +12,19 @@ interface JwtPayload {
 
 export default function () {
     const params = useSearchParams()
-    const userDetails : string = params.get('userDetails') || ''
-
-    const [userId,setUserId] = useState<number>(0)
-    const [amount,setAmount] = useState<number>(0)
-
-    useEffect(()=>{
-        if(!userDetails)
-            {
-                throw new Error('url incorrect!')
-            }
-        
-            if(!process.env.NEXT_PUBLIC_JWT_SECRET)
-            {
-                throw new Error('secret not found!')
-            }
-            
-            let data
-            try
-            {   
-                data = jwt.verify(userDetails,process.env.NEXT_PUBLIC_JWT_SECRET) as JwtPayload
-                setUserId(Number(data.userId))
-                setAmount(Number(data.amount))
-            }
-            catch(e)
-            {
-                console.log(e)
-            }
-    },[userId,amount])
-    
-
-    console.log(userId)
-    console.log(amount)
+    const userDetails: string = params.get('userDetails') || ''
 
     const [cardNumber, setCardNumber] = useState("")
     const [password, setPassword] = useState("")
 
-    const handleTransferAmount = async () => {
-        try {
-            await transferAmount({ userId, amount, cardNumber, password });
-        } catch (error) {
-            console.error("Error transferring amount:", error);
-        }
-    };
+
+    const handleTransferAmount = async (userDetails : string) => {
+            try {
+                await transferAmount({ userDetails, cardNumber, password })
+            } catch (error) {
+                console.error("Transfer failed:", error)
+            }
+    }
 
     return <div>
         <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -119,7 +89,10 @@ export default function () {
                         <button
                             type="submit"
                             className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                            onClick={handleTransferAmount}
+                            onClick={ (e) => {
+                                e.preventDefault()
+                                handleTransferAmount(userDetails)
+                            }}
                         >
                             Sign in
                         </button>

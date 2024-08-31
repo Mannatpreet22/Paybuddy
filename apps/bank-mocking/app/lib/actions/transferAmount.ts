@@ -4,22 +4,28 @@ import db from "@repo/db/client"
 import axios from "axios"
 import bcrypt from "bcrypt"
 import crypto from "crypto"
-
+import { verify } from 'jsonwebtoken'
 
 type TransferFunds = {
-    userId : number,
-    amount : number,
+    userDetails : string,
     cardNumber : string,
     password : string
 }
 
-export default async function transferAmount({userId,amount,cardNumber,password} : TransferFunds){
-    console.log({userId,amount,cardNumber,password})
+interface JwtPayload {
+    userId: string
+    amount: number
+}
+
+export default async function transferAmount({userDetails,cardNumber,password} : TransferFunds){
+    const data = decodeJWT(userDetails)
+    const userId = data?.userId
+    const amount = data?.amount
+
     if(!userId || !amount)
     {
         throw new Error('userId not found!')
     }
-
 
     // find user
 
@@ -103,4 +109,20 @@ function generateRandomToken()
     const token = crypto.createHash('sha256').update(dataToHash).digest('hex')
 
     return token
+}
+
+const decodeJWT = (userDetails: string): JwtPayload | null => {
+    if (!process.env.NEXT_PUBLIC_JWT_SECRET) {
+        throw new Error('Secret not found!')
+    }
+
+    try {
+        const data =  verify(userDetails, process.env.NEXT_PUBLIC_JWT_SECRET) as JwtPayload
+        console.log(data)
+        return data
+    } catch (e) {
+       
+        console.error('unknown error',e)
+        return null
+    }
 }
