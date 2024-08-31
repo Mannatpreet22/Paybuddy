@@ -12,13 +12,16 @@ app.post('/HDFCwebhook',async (req,res) =>{
         amount: req.body.amount
     }
 
+    console.log(paymentInformation.amount)
     const userInfo = await db.onRampTransaction.findFirst({
         where : {
-            userId : Number(paymentInformation.userId)
+            userId : Number(paymentInformation.userId),
+            status : "Processing",
+            amount : paymentInformation.amount
         }           
     })
 
-    if(userInfo?.status === "Success" || userInfo?.status === "Failure"){
+    if(!userInfo){
         return res.status(411).json({
             message: "Error while processing webhook"
         })
@@ -43,10 +46,12 @@ app.post('/HDFCwebhook',async (req,res) =>{
 
         await db.onRampTransaction.update({
             where : {
-                token : paymentInformation.token,
+                //token : paymentInformation.token,
+                id: userInfo.id
             },
             data : {
-                status : "Success"
+                status : "Success",
+                token : paymentInformation.token
             }
         })
 
