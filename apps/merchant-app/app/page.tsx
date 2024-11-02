@@ -1,10 +1,9 @@
-"use client";
-
-import { useBalance } from "@repo/store/balance";
+import { BackgroundBeamsWithCollisionDemo } from "../_components/BackgroundBeamsWithCollision";
+import { SignupFormDemo } from "../_components/Input";
 
 export default function() {
-  const balance = useBalance();
-  return <div>
-    hi there {balance}
+  return <div className="h-screen w-screen">
+    <SignupFormDemo />
+    <BackgroundBeamsWithCollisionDemo />
   </div>
 }
